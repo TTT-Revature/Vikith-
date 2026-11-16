@@ -160,25 +160,8 @@ python --version
 Python execution involves converting source code into bytecode and executing that bytecode through the Python runtime.
 
 ### Step 1: Writing Source Code
-
-A programmer writes Python code and saves it in a file with the `.py` extension.
-
-**Example:**
-
-```python
-print("Hello, Python")
-```
-
 ### Step 2: Compilation to Bytecode
-
-In CPython, the source code is compiled into an intermediate representation called bytecode.
-
-Bytecode consists of instructions that can be executed by the Python Virtual Machine.
-
 ### Step 3: Python Virtual Machine (PVM)
-
-The Python Virtual Machine executes the bytecode instructions and produces the program output.
-
 ### Python Execution Flow
 
 ```text
