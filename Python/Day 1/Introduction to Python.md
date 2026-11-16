@@ -2,16 +2,12 @@
 
 ## 1. What is Python?
 
-Python is a high-level, general-purpose programming language known for its simple syntax and readability.
+high-level, general-purpose programming language
 
 - **Created by:** Guido van Rossum
 - **First Released:** 1991
 - **Latest Version:** Python 3.15.2 (as noted in these training notes)
 - **File Extension:** `.py`
-
-Python supports multiple programming paradigms, including procedural, object-oriented, and functional programming.
-
-It supports classes and objects, making it suitable for developing large-scale applications.
 
 ---
 
@@ -19,11 +15,11 @@ It supports classes and objects, making it suitable for developing large-scale a
 
 ### 2.1 Interpreted Language
 
-Python code is executed by the Python interpreter. In CPython, source code is first compiled into bytecode, which is then executed by the Python Virtual Machine (PVM).
+executed by the Python interpreter. In CPython, source code is first compiled into bytecode
+
+, which is then executed by the Python Virtual Machine (PVM).
 
 ### 2.2 Object-Oriented Programming
-
-Python supports classes and objects, inheritance, polymorphism, encapsulation, and abstraction.
 
 ### 2.3 Platform Independent
 
