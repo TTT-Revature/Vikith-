@@ -1,1 +1,6 @@
+5. Python Indentation
+
+ refers to the spaces
+if age >= 18:
+    print("You are eligible to vote")
 
