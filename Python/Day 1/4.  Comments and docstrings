@@ -1,0 +1,79 @@
+4. Python Comments
+
+Comments are statements written in Python code to explain the purpose or functionality of the program.
+
+4.1 Single-Line Comments
+
+A single-line comment starts with the `#` symbol.
+
+# This is a single-line comment
+
+# Display a welcome message
+print("Welcome to Python")
+
+
+4.2 Multi-Line Comments
+
+# This is the first line
+# This is the second line
+# This is the third line
+
+print("Python Programming")
+
+
+4.3 Documentation Strings (Docstrings)
+
+def greet():
+    """
+    This function displays
+    a welcome message.
+    """
+    print("Welcome to Python")
+
+greet()
+
+
+
+**Accessing a Docstring:**
+
+Python provides the `__doc__` attribute to access a function's documentation string.
+
+```python
+def greet():
+    """Displays a welcome message."""
+    print("Hello!")
+
+print(greet.__doc__)
+```
+
+**Output:**
+
+```text
+Displays a welcome message.
+```
+
+### 4.4 Difference Between Comments and Docstrings
+
+| Feature | Comments | Docstrings |
+|---|---|---|
+| Symbol | `#` | `"""` or `'''` |
+| Purpose | Explain code | Document modules, classes, and functions |
+| Execution | Ignored | Creates a string literal |
+| Accessible at runtime | No | Yes, through `__doc__` |
+| Common usage | Code explanation | Documentation |
+
+### 4.5 Best Practices
+
+1. Write comments that explain why something is done.
+2. Avoid unnecessary comments.
+3. Keep comments short and meaningful.
+4. Use docstrings to document functions and classes.
+5. Update comments whenever the related code changes.
+
+### Summary
+
+- `#` is used for single-line comments.
+- Multiple `#` lines can be used for multi-line comments.
+- Triple-quoted strings can be used to write docstrings.
+- Docstrings provide documentation for modules, classes, and functions.
+- Comments are ignored during normal execution, whereas docstrings are runtime string objects.
