@@ -45,3 +45,247 @@ Python Virtual Machine
 Program Output
 
 
+
+# Introduction to Python
+
+## 1. What is Python?
+
+Python is a high-level, general-purpose programming language known for its simple syntax and readability.
+
+- **Created by:** Guido van Rossum
+- **First Released:** 1991
+- **Latest Version:** Python 3.15.2 (as noted in these training notes)
+- **File Extension:** `.py`
+
+Python supports multiple programming paradigms, including procedural, object-oriented, and functional programming.
+
+It supports classes and objects, making it suitable for developing large-scale applications.
+
+---
+
+## 2. Features of Python
+
+### 2.1 Interpreted Language
+
+Python code is executed by the Python interpreter. In CPython, source code is first compiled into bytecode, which is then executed by the Python Virtual Machine (PVM).
+
+### 2.2 Object-Oriented Programming
+
+Python supports classes and objects, inheritance, polymorphism, encapsulation, and abstraction.
+
+### 2.3 Platform Independent
+
+Python programs can run on different operating systems, such as Windows, Linux, and macOS, provided a compatible Python environment is available.
+
+### 2.4 Dynamically Typed Language
+
+Python determines the type of a variable at runtime. We do not need to explicitly declare the variable's data type.
+
+**Example:**
+
+```python
+x = 10
+print(type(x))
+
+x = "Python"
+print(type(x))
+```
+
+**Output:**
+
+```text
+<class 'int'>
+<class 'str'>
+```
+
+---
+
+## 3. First Python Program
+
+The `print()` function is used to display output on the screen.
+
+**Example:**
+
+```python
+print("Hello, World!")
+```
+
+**Output:**
+
+```text
+Hello, World!
+```
+
+---
+
+## 4. Python Comments
+
+Comments are used to explain code and improve readability. They are ignored during normal program execution.
+
+### 4.1 Single-Line Comment
+
+A single-line comment starts with the `#` symbol.
+
+```python
+# This is a single-line comment
+
+print("Welcome to Python")
+```
+
+### 4.2 Multi-Line Comments
+
+Python does not have a dedicated multi-line comment syntax. Multiple `#` lines can be used.
+
+```python
+# This is the first line
+# This is the second line
+# This is the third line
+```
+
+### 4.3 Documentation Strings (Docstrings)
+
+Triple-quoted strings can be used as documentation strings to describe modules, classes, and functions.
+
+```python
+"""
+This is a documentation string.
+It can span multiple lines.
+"""
+```
+
+---
+
+## 5. Python Indentation
+
+Indentation refers to the spaces at the beginning of a code line.
+
+Python uses indentation to define blocks of code instead of curly braces `{}`.
+
+**Important:** Python commonly uses four spaces for indentation.
+
+**Example:**
+
+```python
+age = 20
+
+if age >= 18:
+    print("You are eligible to vote")
+```
+
+**Output:**
+
+```text
+You are eligible to vote
+```
+
+### Why is indentation important?
+
+- Defines code blocks.
+- Improves code readability.
+- Maintains the structure of conditional statements, loops, and functions.
+- Incorrect indentation can result in an `IndentationError`.
+
+---
+
+## 6. Checking the Python Version
+
+Python provides the `sys` module to retrieve information about the Python interpreter.
+
+**Example:**
+
+```python
+import sys
+
+print(sys.version)
+```
+
+**Alternative command:**
+
+```bash
+python --version
+```
+
+---
+
+## 7. How Python Works Internally
+
+Python execution involves converting source code into bytecode and executing that bytecode through the Python runtime.
+
+### Step 1: Writing Source Code
+
+A programmer writes Python code and saves it in a file with the `.py` extension.
+
+**Example:**
+
+```python
+print("Hello, Python")
+```
+
+### Step 2: Compilation to Bytecode
+
+In CPython, the source code is compiled into an intermediate representation called bytecode.
+
+Bytecode consists of instructions that can be executed by the Python Virtual Machine.
+
+### Step 3: Python Virtual Machine (PVM)
+
+The Python Virtual Machine executes the bytecode instructions and produces the program output.
+
+### Python Execution Flow
+
+```text
+        Source Code (.py)
+                |
+                v
+        Python Compiler
+                |
+                v
+             Bytecode
+                |
+                v
+    Python Virtual Machine (PVM)
+                |
+                v
+          Program Output
+```
+
+**Important Concepts:**
+
+| Term | Description |
+|---|---|
+| Source Code | Python program written by the programmer |
+| Compiler | Converts source code into bytecode in CPython |
+| Bytecode | Intermediate instructions |
+| PVM | Executes Python bytecode |
+| `.pyc` | Cached bytecode file |
+
+---
+
+## 8. Summary
+
+- Python is a high-level, general-purpose programming language.
+- It was created by Guido van Rossum and released in 1991.
+- Python supports object-oriented programming.
+- It is dynamically typed.
+- Python uses indentation to define code blocks.
+- The `print()` function displays output.
+- The `#` symbol is used for single-line comments.
+- CPython compiles source code into bytecode.
+- The Python Virtual Machine executes bytecode.
+
+---
+
+## 9. Practice Exercises
+
+1. Write a Python program to print your name.
+2. Display the Python version using the `sys` module.
+3. Write a program using single-line comments.
+4. Create a documentation string using triple quotes.
+5. Write an `if-else` statement using correct indentation.
+6. Create a variable and check its data type using `type()`.
+7. Write a program that displays "Eligible to vote" if the age is 18 or above.
+
+---
+
+**End of Topic 01 – Introduction to Python**
+
