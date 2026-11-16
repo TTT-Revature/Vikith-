@@ -1,20 +1,17 @@
 interpreter is the software responsible for executing Python programs.
+Run - python hello.py
 
 
 1. Python Source Code
-
 program.py
 
 2. Python Compiler
-
 Parsing and compilation
 
 3. Bytecode
-
 Intermediate instructions
 
 4. Python Virtual Machine
-
 Executes bytecode instructions
 
 5. Program Output
