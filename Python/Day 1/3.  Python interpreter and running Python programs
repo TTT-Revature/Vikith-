@@ -1,5 +1,6 @@
 interpreter is the software responsible for executing Python programs.
-##Running a Python Program - python hello.py
+
+#Running a Python Program - python hello.py
 
 
 1. Python Source Code
