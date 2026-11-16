@@ -1,18 +1,38 @@
-interpreter is the software responsible for executing Python programs.
+## How Python Interpreter Works
+It processes Python source code and executes the instructions using the Python runtime.
 
-#Running a Python Program - python hello.py
+### Running a Python Program
 
+Python programs are saved with the `.py` file extension.
 
-1. Python Source Code
-program.py
+**Example:**
 
-2. Python Compiler
-Parsing and compilation
+Create a file named `hello.py`.
 
-3. Bytecode
-Intermediate instructions
+```python
+print("Hello, Python!")
+```
 
-4. Python Virtual Machine
-Executes bytecode instructions
+```bash
+python hello.py
+```
 
-5. Program Output
+**Output:**
+
+```text
+Hello, Python!
+```
+
+---
+
+### Python Program Execution Process
+
+#### Step 1: Python Source Code
+
+#### Step 2: Python Compiler
+
+#### Step 3: Bytecode
+
+#### Step 4: Python Virtual Machine (PVM)
+
+#### Step 5: Program Output
