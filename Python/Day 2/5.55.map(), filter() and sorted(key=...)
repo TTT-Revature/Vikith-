@@ -1,0 +1,398 @@
+# Python map(), filter() and sorted(key=...)
+
+These three tools are commonly used to process, filter, and sort data in Python.
+
+1. `map()` – Transforms every item.
+2. `filter()` – Selects items based on a condition.
+3. `sorted(key=...)` – Sorts items using a custom rule.
+
+## 1. map()
+
+The `map()` function applies a given function to every element in an iterable.
+
+**Syntax:**
+
+```python
+map(function, iterable)
+```
+
+It returns a map iterator. Use `list()` to convert the result into a list.
+
+### Example 1: Square Every Number
+
+```python
+numbers = [1, 2, 3, 4, 5]
+
+result = map(lambda x: x * x, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[1, 4, 9, 16, 25]
+```
+
+### Example 2: Convert Strings to Uppercase
+
+```python
+names = ["vikith", "ram", "anil"]
+
+result = map(lambda name: name.upper(), names)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+['VIKITH', 'RAM', 'ANIL']
+```
+
+### Example 3: Add 10 to Every Number
+
+```python
+numbers = [10, 20, 30, 40]
+
+result = map(lambda x: x + 10, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[20, 30, 40, 50]
+```
+
+### Example 4: Using map() with a Normal Function
+
+```python
+def double(number):
+    return number * 2
+
+numbers = [1, 2, 3, 4]
+
+result = map(double, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[2, 4, 6, 8]
+```
+
+## 2. filter()
+
+The `filter()` function selects elements from an iterable based on a condition.
+
+**Syntax:**
+
+```python
+filter(function, iterable)
+```
+
+It returns a filter iterator containing only elements for which the function returns `True`.
+
+### Example 1: Filter Even Numbers
+
+```python
+numbers = [1, 2, 3, 4, 5, 6]
+
+result = filter(lambda x: x % 2 == 0, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[2, 4, 6]
+```
+
+### Example 2: Filter Numbers Greater Than 50
+
+```python
+numbers = [10, 60, 30, 80, 45, 90]
+
+result = filter(lambda x: x > 50, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[60, 80, 90]
+```
+
+### Example 3: Filter Names Starting with A
+
+```python
+names = ["Anil", "Vikith", "Arun", "Ram", "Ajay"]
+
+result = filter(lambda name: name.startswith("A"), names)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+['Anil', 'Arun', 'Ajay']
+```
+
+### Example 4: Using filter() with a Normal Function
+
+```python
+def is_positive(number):
+    return number > 0
+
+numbers = [-10, 20, -5, 30, 0]
+
+result = filter(is_positive, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[20, 30]
+```
+
+### Important: filter() with None
+
+When the function argument is `None`, `filter()` keeps truthy elements.
+
+```python
+values = [0, 1, "", "Python", None, False, 10]
+
+result = filter(None, values)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[1, 'Python', 10]
+```
+
+## 3. sorted(key=...)
+
+The `sorted()` function returns a new sorted list from an iterable.
+
+**Syntax:**
+
+```python
+sorted(iterable, key=None, reverse=False)
+```
+
+- `iterable` – Data to sort.
+- `key` – Function used to determine the sorting value.
+- `reverse` – Set to `True` for descending order.
+
+### Example 1: Normal Sorting
+
+```python
+numbers = [50, 10, 40, 20, 30]
+
+print(sorted(numbers))
+```
+
+**Output:**
+
+```text
+[10, 20, 30, 40, 50]
+```
+
+### Example 2: Descending Order
+
+```python
+numbers = [50, 10, 40, 20, 30]
+
+print(sorted(numbers, reverse=True))
+```
+
+**Output:**
+
+```text
+[50, 40, 30, 20, 10]
+```
+
+### Example 3: Sort Strings by Length
+
+```python
+names = ["Vikith", "Ram", "Anil", "Christopher"]
+
+result = sorted(names, key=lambda name: len(name))
+
+print(result)
+```
+
+**Output:**
+
+```text
+['Ram', 'Anil', 'Vikith', 'Christopher']
+```
+
+Here, `key=lambda name: len(name)` tells Python to sort names based on their length.
+
+### Example 4: Sort by Last Character
+
+```python
+names = ["Python", "Java", "C++", "Ruby"]
+
+result = sorted(names, key=lambda name: name[-1])
+
+print(result)
+```
+
+**Output:**
+
+```text
+['Java', 'Ruby', 'Python', 'C++']
+```
+
+Python compares the last character of each string.
+
+### Example 5: Sort Tuples by Marks
+
+```python
+students = [
+    ("Vikith", 85),
+    ("Anil", 90),
+    ("Ram", 75),
+    ("Kiran", 95)
+]
+
+result = sorted(students, key=lambda student: student[1])
+
+print(result)
+```
+
+**Output:**
+
+```text
+[('Ram', 75), ('Vikith', 85), ('Anil', 90), ('Kiran', 95)]
+```
+
+Here, `student[1]` represents the marks.
+
+### Example 6: Sort Dictionary Items by Value
+
+```python
+marks = {
+    "Python": 90,
+    "Java": 80,
+    "SQL": 95,
+    "HTML": 70
+}
+
+result = sorted(marks.items(), key=lambda item: item[1])
+
+print(result)
+```
+
+**Output:**
+
+```text
+[('HTML', 70), ('Java', 80), ('Python', 90), ('SQL', 95)]
+```
+
+### Example 7: Sort by Multiple Conditions
+
+We can return a tuple from the key function to sort by multiple conditions.
+
+```python
+students = [
+    ("Vikith", 90),
+    ("Anil", 85),
+    ("Ram", 90),
+    ("Kiran", 85)
+]
+
+result = sorted(students, key=lambda student: (-student[1], student[0]))
+
+print(result)
+```
+
+**Output:**
+
+```text
+[('Ram', 90), ('Vikith', 90), ('Anil', 85), ('Kiran', 85)]
+```
+
+Explanation:
+
+- `-student[1]` sorts marks in descending order.
+- `student[0]` sorts names alphabetically when marks are equal.
+
+## 4. Difference Between map(), filter() and sorted()
+
+| Feature | map() | filter() | sorted() |
+|---|---|---|---|
+| Purpose | Transform elements | Select elements | Arrange elements |
+| Returns | Map iterator | Filter iterator | New list |
+| Uses function | Yes | Yes | Optional key function |
+| Changes original data | No | No | No |
+| Common use | Calculations | Conditional selection | Sorting |
+
+## 5. Combining map(), filter() and sorted()
+
+We can combine these functions to perform multiple operations.
+
+### Example: Filter, Transform and Sort
+
+```python
+numbers = [10, 25, 30, 45, 50, 65, 70]
+
+# Step 1: Keep numbers greater than 30
+filtered = filter(lambda x: x > 30, numbers)
+
+# Step 2: Multiply each number by 2
+mapped = map(lambda x: x * 2, filtered)
+
+# Step 3: Sort the result in ascending order
+result = sorted(mapped)
+
+print(result)
+```
+
+**Output:**
+
+```text
+[90, 100, 130, 140]
+```
+
+### Understanding the Execution
+
+Original list:
+
+```text
+[10, 25, 30, 45, 50, 65, 70]
+```
+
+After `filter()`:
+
+```text
+[45, 50, 65, 70]
+```
+
+After `map()`:
+
+```text
+[90, 100, 130, 140]
+```
+
+After `sorted()`:
+
+```text
+[90, 100, 130, 140]
+```
+
+
