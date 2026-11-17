@@ -1,0 +1,259 @@
+# Python Lambda Functions
+
+## 1. What Is a Lambda Function?
+
+A lambda function is a small anonymous function defined using the `lambda` keyword.
+
+Unlike normal functions, lambda functions are written in a single expression and return the result automatically.
+
+**Syntax:**
+
+```python
+lambda arguments: expression
+```
+
+- `lambda` – Keyword used to create the function.
+- `arguments` – Inputs accepted by the function.
+- `expression` – Operation performed and returned automatically.
+
+## 2. Normal Function vs Lambda Function
+
+### Normal Function
+
+```python
+def square(number):
+    return number * number
+
+print(square(5))
+```
+
+**Output:**
+
+```text
+25
+```
+
+### Lambda Function
+
+```python
+square = lambda number: number * number
+
+print(square(5))
+```
+
+**Output:**
+
+```text
+25
+```
+
+Both functions perform the same operation.
+
+## 3. Lambda with Multiple Arguments
+
+A lambda function can accept multiple arguments.
+
+```python
+add = lambda a, b: a + b
+
+print(add(10, 20))
+```
+
+**Output:**
+
+```text
+30
+```
+
+Another example:
+
+```python
+multiply = lambda a, b: a * b
+
+print(multiply(5, 4))
+```
+
+**Output:**
+
+```text
+20
+```
+
+## 4. Lambda with Conditional Expressions
+
+Lambda functions can use conditional expressions (`if-else`).
+
+```python
+check = lambda number: "Even" if number % 2 == 0 else "Odd"
+
+print(check(10))
+print(check(7))
+```
+
+**Output:**
+
+```text
+Even
+Odd
+```
+
+Another example:
+
+```python
+maximum = lambda a, b: a if a > b else b
+
+print(maximum(10, 20))
+```
+
+**Output:**
+
+```text
+20
+```
+
+## 5. Lambda with `map()`
+
+The `map()` function applies a given function to every item in an iterable.
+
+**Syntax:**
+
+```python
+map(function, iterable)
+```
+
+### Example: Square Every Number
+
+```python
+numbers = [1, 2, 3, 4, 5]
+
+result = map(lambda x: x * x, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[1, 4, 9, 16, 25]
+```
+
+Explanation:
+
+- `lambda x: x * x` calculates the square.
+- `map()` applies the lambda to every number.
+- `list()` converts the map iterator into a list.
+
+## 6. Lambda with `filter()`
+
+The `filter()` function selects items from an iterable based on a condition.
+
+**Syntax:**
+
+```python
+filter(function, iterable)
+```
+
+### Example: Filter Even Numbers
+
+```python
+numbers = [1, 2, 3, 4, 5, 6]
+
+result = filter(lambda x: x % 2 == 0, numbers)
+
+print(list(result))
+```
+
+**Output:**
+
+```text
+[2, 4, 6]
+```
+
+Explanation:
+
+- The lambda checks whether a number is even.
+- `filter()` keeps only items for which the condition is true.
+- `list()` converts the filter iterator into a list.
+
+## 7. Lambda with `sorted()`
+
+Lambda functions can be used as the `key` argument of `sorted()` to customize sorting.
+
+### Example: Sort by Length of Strings
+
+```python
+names = ["Vikith", "Ram", "Anil", "Christopher"]
+
+result = sorted(names, key=lambda name: len(name))
+
+print(result)
+```
+
+**Output:**
+
+```text
+['Ram', 'Anil', 'Vikith', 'Christopher']
+```
+
+### Example: Sort Tuples by Second Element
+
+```python
+students = [
+    ("Vikith", 85),
+    ("Anil", 90),
+    ("Ram", 75)
+]
+
+result = sorted(students, key=lambda student: student[1])
+
+print(result)
+```
+
+**Output:**
+
+```text
+[('Ram', 75), ('Vikith', 85), ('Anil', 90)]
+```
+
+## 8. Lambda with Dictionaries
+
+Lambda functions can process dictionary data.
+
+### Example: Sort Dictionary Items by Value
+
+```python
+marks = {
+    "Python": 90,
+    "Java": 80,
+    "SQL": 95
+}
+
+result = sorted(marks.items(), key=lambda item: item[1])
+
+print(result)
+```
+
+**Output:**
+
+```text
+[('Java', 80), ('Python', 90), ('SQL', 95)]
+```
+
+Here:
+
+- `marks.items()` returns key-value pairs.
+- `item[0]` represents the key.
+- `item[1]` represents the value.
+- Sorting uses the value.
+
+## 9. Lambda vs Normal Function
+
+| Feature | Lambda Function | Normal Function |
+|---|---|---|
+| Keyword | `lambda` | `def` |
+| Name | Usually anonymous | Usually named |
+| Body | Single expression | Multiple statements |
+| Return | Automatically returns expression result | Uses `return` |
+| Documentation | No dedicated docstring support | Supports docstrings |
+| Best for | Small, simple operations | Complex logic |
+
