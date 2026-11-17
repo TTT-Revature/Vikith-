@@ -1,0 +1,287 @@
+# Operator Precedence in Python
+
+## 1. What is Operator Precedence?
+
+Operator precedence defines the order in which operators are evaluated in an expression.
+
+When an expression contains multiple operators, Python follows predefined precedence rules.
+
+### Example
+
+```python
+result = 10 + 5 * 2
+
+print(result)  # 20
+```
+
+**Explanation:**
+1. Multiplication is performed first: `5 * 2 = 10`.
+2. Addition is performed next: `10 + 10 = 20`.
+
+## 2. Operator Precedence Table
+
+The following table shows operators from highest to lowest precedence.
+
+| Priority | Operators | Description |
+|---|---|---|
+| 1 | `()` | Parentheses |
+| 2 | `**` | Exponentiation |
+| 3 | `+x`, `-x`, `~x` | Unary operators |
+| 4 | `*`, `/`, `//`, `%`, `@` | Multiplication, division, etc. |
+| 5 | `+`, `-` | Addition, subtraction |
+| 6 | `<<`, `>>` | Bitwise shifts |
+| 7 | `&` | Bitwise AND |
+| 8 | `^` | Bitwise XOR |
+| 9 | `\|` | Bitwise OR |
+| 10 | `==`, `!=`, `<`, `>`, `<=`, `>=`, `is`, `in` | Comparisons, identity, membership |
+| 11 | `not` | Logical NOT |
+| 12 | `and` | Logical AND |
+| 13 | `or` | Logical OR |
+| 14 | `if ... else` | Conditional expression |
+| 15 | `lambda` | Lambda expression |
+| 16 | `:=` | Assignment expression |
+
+## 3. Parentheses `()`
+
+Parentheses have the highest precedence and can be used to control the evaluation order.
+
+```python
+a = 10 + 5 * 2
+b = (10 + 5) * 2
+
+print(a)  # 20
+print(b)  # 30
+```
+
+Without parentheses, multiplication happens first. With parentheses, addition happens first.
+
+## 4. Exponentiation `**`
+
+Exponentiation has higher precedence than multiplication, division, addition, and subtraction.
+
+```python
+print(2 + 3 ** 2)  # 11
+```
+
+Explanation:
+- `3 ** 2 = 9`
+- `2 + 9 = 11`
+
+**Important:** Exponentiation is right-associative.
+
+```python
+print(2 ** 3 ** 2)  # 512
+```
+
+Python evaluates this as:
+
+```python
+print(2 ** (3 ** 2))
+```
+
+## 5. Multiplication and Division
+
+Multiplication, division, floor division, and modulus have the same precedence.
+
+When they appear together, they are evaluated from left to right.
+
+```python
+print(20 / 5 * 2)  # 8.0
+print(20 // 3 % 2) # 0
+```
+
+## 6. Addition and Subtraction
+
+Addition and subtraction have the same precedence and are evaluated from left to right.
+
+```python
+print(20 - 5 + 3)  # 18
+```
+
+## 7. Comparison Operators
+
+Comparison operators have the same precedence level.
+
+```python
+a = 10
+b = 20
+
+print(a < b)   # True
+print(a == b)  # False
+print(a != b)  # True
+```
+
+### Chained Comparisons
+
+Python supports multiple comparisons in one expression.
+
+```python
+age = 23
+
+print(18 <= age <= 60)  # True
+```
+
+This is equivalent to:
+
+```python
+print(18 <= age and age <= 60)
+```
+
+## 8. Logical Operator Precedence
+
+The order is:
+
+1. `not`
+2. `and`
+3. `or`
+
+### Example 1: NOT before AND
+
+```python
+print(not True and True)
+# False
+```
+
+Evaluation:
+- `not True` becomes `False`.
+- `False and True` becomes `False`.
+
+### Example 2: AND before OR
+
+```python
+print(True or False and False)
+# True
+```
+
+Evaluation:
+- `False and False` becomes `False`.
+- `True or False` becomes `True`.
+
+### Example 3: Using Parentheses
+
+```python
+print((True or False) and False)
+# False
+```
+
+Parentheses change the evaluation order.
+
+## 9. Assignment Operators
+
+Assignment operators are generally evaluated after the expression on the right-hand side.
+
+```python
+x = 10
+x += 5 * 2
+
+print(x)  # 20
+```
+
+Explanation:
+- `5 * 2 = 10`
+- `x += 10`
+- `x = 20`
+
+## 10. Associativity
+
+Associativity determines the evaluation direction when operators have the same precedence.
+
+### Left-to-Right Associativity
+
+Most arithmetic operators follow left-to-right evaluation.
+
+```python
+print(20 - 5 - 3)
+# 12
+```
+
+Evaluation:
+
+```python
+(20 - 5) - 3
+```
+
+### Right-to-Left Associativity
+
+Exponentiation follows right-to-left evaluation.
+
+```python
+print(2 ** 3 ** 2)
+# 512
+```
+
+Evaluation:
+
+```python
+2 ** (3 ** 2)
+```
+
+## 11. Important Points to Remember
+
+1. Parentheses have the highest precedence.
+2. Exponentiation is evaluated before multiplication.
+3. Multiplication and division have equal precedence.
+4. Addition and subtraction have equal precedence.
+5. Most arithmetic operators are evaluated left to right.
+6. Exponentiation is evaluated right to left.
+7. `not` has higher precedence than `and`.
+8. `and` has higher precedence than `or`.
+9. Use parentheses to make complex expressions easier to understand.
+10. Operator precedence and associativity are different concepts.
+
+## 12. Practice Questions
+
+Predict the output before running the code.
+
+### Question 1
+```python
+print(10 + 5 * 2)
+```
+
+### Question 2
+```python
+print((10 + 5) * 2)
+```
+
+### Question 3
+```python
+print(2 ** 3 ** 2)
+```
+
+### Question 4
+```python
+print(20 / 5 * 2)
+```
+
+### Question 5
+```python
+print(20 - 5 + 3)
+```
+
+### Question 6
+```python
+print(True or False and False)
+```
+
+### Question 7
+```python
+print(not False and True)
+```
+
+### Question 8
+```python
+print(10 > 5 and 5 > 2 or False)
+```
+
+### Question 9
+```python
+x = 10
+x += 5 * 2
+
+print(x)
+```
+
+### Question 10
+```python
+print(5 + 2 * 3 ** 2)
+```
