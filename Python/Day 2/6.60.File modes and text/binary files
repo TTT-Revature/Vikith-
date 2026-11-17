@@ -1,0 +1,576 @@
+# Python File Modes and Text/Binary Files
+
+## 1. What Are File Modes?
+
+File modes specify how Python should open and interact with a file.
+
+For example:
+
+```python
+open("sample.txt", "r")
+```
+
+Here:
+
+- `sample.txt` is the file name.
+- `r` is the file mode.
+- `r` tells Python to open the file for reading.
+
+Python supports different file modes depending on whether we want to read, write, append, create, or work with binary data.
+
+## 2. Main File Modes
+
+| Mode | Meaning | Description |
+|---|---|---|
+| `r` | Read | Opens an existing file for reading |
+| `w` | Write | Creates a file or overwrites existing content |
+| `a` | Append | Adds content at the end of a file |
+| `x` | Create | Creates a new file; fails if it already exists |
+
+### A. Read Mode (`r`)
+
+Read mode opens an existing file for reading.
+
+- The file must exist.
+- It does not modify the original content.
+- If the file does not exist, Python raises `FileNotFoundError`.
+
+**Example:**
+
+```python
+with open("sample.txt", "r") as file:
+    content = file.read()
+    print(content)
+```
+
+**File content:**
+
+```text
+Hello Python
+Welcome to File Handling
+```
+
+**Output:**
+
+```text
+Hello Python
+Welcome to File Handling
+```
+
+### B. Write Mode (`w`)
+
+Write mode creates a new file if it does not exist.
+
+If the file already exists, its previous content is erased when opened.
+
+**Example:**
+
+```python
+with open("sample.txt", "w") as file:
+    file.write("Learning Python")
+```
+
+**Updated file content:**
+
+```text
+Learning Python
+```
+
+**Important:** Be careful when using `w` because it replaces the existing content.
+
+### C. Append Mode (`a`)
+
+Append mode adds new content at the end of a file.
+
+- Existing content is preserved.
+- A new file is created if it does not exist.
+- The file is positioned at the end for writing.
+
+**Example:**
+
+```python
+with open("sample.txt", "a") as file:
+    file.write("\nLearning File Handling")
+```
+
+**Updated file content:**
+
+```text
+Learning Python
+Learning File Handling
+```
+
+### D. Exclusive Creation Mode (`x`)
+
+The `x` mode creates a new file.
+
+- If the file does not exist, it is created.
+- If the file already exists, Python raises `FileExistsError`.
+- It prevents accidentally overwriting an existing file.
+
+**Example:**
+
+```python
+with open("newfile.txt", "x") as file:
+    file.write("New file created")
+```
+
+## 3. Understanding the Plus (`+`) Modes
+
+The `+` symbol allows both reading and writing.
+
+Python provides three common combinations:
+
+| Mode | Description |
+|---|---|
+| `r+` | Read and write without truncating the file |
+| `w+` | Read and write; existing content is erased |
+| `a+` | Read and append; writing happens at the end |
+
+### A. Read and Write (`r+`)
+
+- The file must already exist.
+- Allows reading and writing.
+- Does not automatically erase existing content.
+- The initial file position is at the beginning.
+
+**Example:**
+
+Assume `sample.txt` contains:
+
+```text
+Hello Python
+```
+
+```python
+with open("sample.txt", "r+") as file:
+    print(file.read())
+
+    file.seek(0)
+    file.write("Java")
+```
+
+**Output:**
+
+```text
+Hello Python
+```
+
+**Updated file content:**
+
+```text
+Javao Python
+```
+
+Why?
+
+- `read()` moves the file pointer to the end.
+- `seek(0)` moves it back to the beginning.
+- `write("Java")` overwrites the first four characters.
+- The remaining old content is not automatically removed.
+
+### B. Write and Read (`w+`)
+
+- Creates a new file if it does not exist.
+- Erases existing content when opened.
+- Allows both writing and reading.
+
+**Example:**
+
+```python
+with open("sample.txt", "w+") as file:
+    file.write("Hello Python")
+
+    file.seek(0)
+
+    print(file.read())
+```
+
+**Output:**
+
+```text
+Hello Python
+```
+
+Why do we use `seek(0)`?
+
+After writing, the file pointer is at the end. We move it to the beginning before reading.
+
+### C. Append and Read (`a+`)
+
+- Creates a file if it does not exist.
+- Preserves existing content.
+- Allows reading.
+- Writing always happens at the end of the file.
+
+**Example:**
+
+Assume `sample.txt` contains:
+
+```text
+Hello Python
+```
+
+```python
+with open("sample.txt", "a+") as file:
+    file.write("\nWelcome")
+
+    file.seek(0)
+
+    print(file.read())
+```
+
+**Output:**
+
+```text
+Hello Python
+Welcome
+```
+
+Even after using `seek(0)`, writing in append mode happens at the end.
+
+## 4. Understanding Text and Binary Files
+
+Python works with two major types of files:
+
+1. Text files
+2. Binary files
+
+### A. Text Files
+
+Text files store data as characters that can be decoded using a character encoding such as UTF-8.
+
+Examples:
+
+- `.txt`
+- `.csv`
+- `.json`
+- `.py`
+- `.html`
+- `.xml`
+
+**Example:**
+
+```python
+with open("message.txt", "w", encoding="utf-8") as file:
+    file.write("Hello Python")
+```
+
+Reading the file:
+
+```python
+with open("message.txt", "r", encoding="utf-8") as file:
+    content = file.read()
+    print(content)
+```
+
+**Output:**
+
+```text
+Hello Python
+```
+
+Text mode converts between Python strings (`str`) and bytes using the selected encoding.
+
+### B. Binary Files
+
+Binary files store data as bytes rather than decoded text.
+
+Examples:
+
+- `.jpg`
+- `.png`
+- `.mp3`
+- `.mp4`
+- `.pdf`
+- `.exe`
+
+Binary files should generally be opened using binary mode (`b`).
+
+**Example: Reading an Image**
+
+```python
+with open("photo.jpg", "rb") as file:
+    content = file.read()
+
+    print(type(content))
+    print(len(content))
+```
+
+**Possible Output:**
+
+```text
+<class 'bytes'>
+125000
+```
+
+The size depends on the actual image file.
+
+Here:
+
+- `rb` means read binary.
+- `read()` returns bytes instead of a string.
+- The image data is not automatically converted into readable text.
+
+## 5. Understanding Binary Modes
+
+Binary mode is represented by adding `b` to a file mode.
+
+| Mode | Description |
+|---|---|
+| `rb` | Read binary |
+| `wb` | Write binary |
+| `ab` | Append binary |
+| `xb` | Create binary file |
+| `rb+` | Read and write binary |
+| `wb+` | Write and read binary |
+| `ab+` | Append and read binary |
+
+### Example 1: Copying an Image
+
+We can copy an image using binary file handling.
+
+```python
+with open("photo.jpg", "rb") as source:
+    image_data = source.read()
+
+with open("copy.jpg", "wb") as destination:
+    destination.write(image_data)
+```
+
+This creates a copy of the image.
+
+Why binary mode?
+
+An image contains binary data. Reading and writing it as text can corrupt the file.
+
+### Example 2: Reading Binary Data
+
+```python
+with open("photo.jpg", "rb") as file:
+    data = file.read(10)
+
+    print(data)
+```
+
+**Possible Output:**
+
+```text
+b'\xff\xd8\xff\xe0\x00\x10JFIF'
+```
+
+The exact output depends on the image format and file.
+
+The `b` prefix indicates that the value is a bytes object.
+
+## 6. Difference Between Text Mode and Binary Mode
+
+| Feature | Text Mode (`t`) | Binary Mode (`b`) |
+|---|---|---|
+| Data type | `str` | `bytes` |
+| Data handling | Characters | Raw bytes |
+| Encoding | Uses encoding | No text encoding or decoding |
+| Newline handling | Can translate newlines | No newline translation |
+| Common files | TXT, CSV, JSON | Images, audio, video, PDF |
+| Example | `open("a.txt", "r")` | `open("a.jpg", "rb")` |
+
+**Important:** Text mode is the default mode. Therefore, `"r"` and `"rt"` are equivalent.
+
+## 7. Understanding the `t` Mode
+
+The `t` mode explicitly specifies text mode.
+
+Examples:
+
+```python
+open("sample.txt", "r")
+open("sample.txt", "rt")
+open("sample.txt", "w")
+open("sample.txt", "wt")
+```
+
+Both forms in each pair are equivalent.
+
+Text mode supports encoding and newline handling.
+
+**Example:**
+
+```python
+with open("sample.txt", "w", encoding="utf-8") as file:
+    file.write("Hello Python")
+```
+
+Here, Python converts the string into bytes using UTF-8 before writing it.
+
+## 8. Understanding Encoding
+
+Encoding converts characters into bytes.
+
+Decoding converts bytes back into characters.
+
+UTF-8 is a commonly used text encoding.
+
+### Example: UTF-8
+
+```python
+with open("sample.txt", "w", encoding="utf-8") as file:
+    file.write("Hello नमस्ते")
+```
+
+Reading:
+
+```python
+with open("sample.txt", "r", encoding="utf-8") as file:
+    print(file.read())
+```
+
+**Output:**
+
+```text
+Hello नमस्ते
+```
+
+If the file is opened using an incompatible encoding, Python may raise a `UnicodeDecodeError`.
+
+**Best practice:** Explicitly specify `encoding="utf-8"` when working with text files.
+
+## 9. Understanding `read()`, `readline()` and `readlines()`
+
+| Method | Returns | Purpose |
+|---|---|---|
+| `read()` | String or bytes | Reads all or a specified amount of data |
+| `readline()` | String or bytes | Reads one line |
+| `readlines()` | List | Reads all lines into a list |
+
+**Example:**
+
+```python
+with open("sample.txt", "r", encoding="utf-8") as file:
+    print(file.read())
+```
+
+To read a fixed number of characters:
+
+```python
+with open("sample.txt", "r", encoding="utf-8") as file:
+    print(file.read(5))
+```
+
+## 10. Understanding File Pointer with seek()
+
+A file pointer tracks the current position during file operations.
+
+### tell()
+
+Returns the current file position.
+
+```python
+with open("sample.txt", "r") as file:
+    print(file.tell())
+
+    file.read(5)
+
+    print(file.tell())
+```
+
+**Output:**
+
+```text
+0
+5
+```
+
+### seek()
+
+Moves the file pointer to a specified position.
+
+```python
+with open("sample.txt", "r") as file:
+    file.seek(0)
+    print(file.read())
+```
+
+**Important:** In binary mode, positions are byte offsets. In text mode, the positions returned by `tell()` are generally opaque values intended to be passed back to `seek()` rather than arbitrary character offsets.
+
+## 11. Complete File Mode Reference
+
+| Mode | Read | Write | Creates if Missing | Erases Existing Content |
+|---|---|---|---|---|
+| `r` | Yes | No | No | No |
+| `w` | No | Yes | Yes | Yes |
+| `a` | No | Yes | Yes | No |
+| `x` | No | Yes | Yes | No; fails if exists |
+| `r+` | Yes | Yes | No | No |
+| `w+` | Yes | Yes | Yes | Yes |
+| `a+` | Yes | Yes | Yes | No |
+| `rb` | Yes | No | No | No |
+| `wb` | No | Yes | Yes | Yes |
+| `ab` | No | Yes | Yes | No |
+| `rb+` | Yes | Yes | No | No |
+| `wb+` | Yes | Yes | Yes | Yes |
+| `ab+` | Yes | Yes | Yes | No |
+
+The same basic mode behavior applies in text and binary modes.
+
+## 12. Common Mistakes
+
+### Mistake 1: Using Read Mode for a Missing File
+
+```python
+with open("missing.txt", "r") as file:
+    print(file.read())
+```
+
+**Error:** `FileNotFoundError`
+
+### Mistake 2: Accidentally Erasing Content
+
+```python
+with open("sample.txt", "w") as file:
+    file.write("New content")
+```
+
+Existing content is erased when the file is opened.
+
+### Mistake 3: Reading Binary Files as Text
+
+```python
+with open("photo.jpg", "r") as file:
+    content = file.read()
+```
+
+This can raise a `UnicodeDecodeError` because arbitrary image bytes may not represent valid text in the selected encoding.
+
+Use:
+
+```python
+with open("photo.jpg", "rb") as file:
+    content = file.read()
+```
+
+### Mistake 4: Reading Immediately After Writing
+
+```python
+with open("sample.txt", "w+") as file:
+    file.write("Hello Python")
+    print(file.read())
+```
+
+This prints an empty string because the file pointer is at the end.
+
+**Correct approach:**
+
+```python
+with open("sample.txt", "w+") as file:
+    file.write("Hello Python")
+
+    file.seek(0)
+
+    print(file.read())
+```
+
+**Output:**
+
+```text
+Hello Python
+```
