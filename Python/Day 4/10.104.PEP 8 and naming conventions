@@ -1,0 +1,206 @@
+# 96. PEP 8 and Naming Conventions
+
+## 1. What is PEP 8?
+
+PEP 8 is the official Python style guide. It provides guidelines for writing clean, readable, and consistent Python code.
+
+**Main purposes:**
+- Improve code readability.
+- Maintain consistent coding style.
+- Follow proper naming conventions.
+- Write clean and maintainable code.
+
+## 2. Naming Conventions
+
+Python uses different naming styles for different elements.
+
+| Element | Convention | Example |
+|---|---|---|
+| Variables | snake_case | `user_name` |
+| Functions | snake_case | `calculate_total()` |
+| Classes | PascalCase | `StudentDetails` |
+| Constants | UPPER_CASE | `MAX_LIMIT` |
+| Modules | lowercase | `calculator.py` |
+| Packages | lowercase | `mypackage` |
+
+### Variables
+
+Use lowercase letters and underscores between words.
+
+```python
+user_name = "Vikith"
+total_price = 500
+```
+
+### Functions
+
+Use snake_case for function names.
+
+```python
+def calculate_salary():
+    pass
+```
+
+### Classes
+
+Use PascalCase for class names.
+
+```python
+class StudentDetails:
+    pass
+```
+
+### Constants
+
+Use uppercase letters with underscores.
+
+```python
+MAX_USERS = 100
+PI = 3.14159
+DATABASE_URL = "localhost"
+```
+
+## 3. Indentation
+
+PEP 8 recommends using 4 spaces per indentation level.
+
+```python
+if age >= 18:
+    print("Eligible")
+    print("Welcome")
+```
+
+Avoid inconsistent indentation.
+
+## 4. Line Length
+
+PEP 8 recommends a maximum line length of 79 characters for code.
+
+Long statements can be split across multiple lines.
+
+```python
+total_price = calculate_total(
+    product_price,
+    quantity,
+    discount
+)
+```
+
+## 5. Spaces Around Operators
+
+Use spaces around assignment and comparison operators.
+
+```python
+# Correct
+total = price + tax
+age = 25
+result = 10 * 5
+
+# Avoid
+total=price+tax
+age=25
+result=10*5
+```
+
+## 6. Blank Lines
+
+- Use two blank lines between top-level functions and classes.
+- Use one blank line between methods inside a class.
+
+```python
+def add(a, b):
+    return a + b
+
+
+def subtract(a, b):
+    return a - b
+
+
+class Calculator:
+
+    def multiply(self, a, b):
+        return a * b
+
+    def divide(self, a, b):
+        return a / b
+```
+
+## 7. Import Guidelines
+
+Imports should generally be placed at the beginning of the file.
+
+Recommended order:
+
+1. Standard library imports.
+2. Third-party library imports.
+3. Local application imports.
+
+```python
+import os
+import math
+
+import pandas as pd
+
+from mymodule import calculate_total
+```
+
+## 8. Comments
+
+Write meaningful and readable comments.
+
+```python
+# Calculate the final price
+final_price = price + tax
+```
+
+Avoid unnecessary comments that simply repeat the code.
+
+## 9. Naming Convention Summary
+
+| Type | Example |
+|---|---|
+| Variable | `first_name` |
+| Function | `get_user_details()` |
+| Class | `BankAccount` |
+| Constant | `MAX_RETRIES` |
+| Module | `user_data.py` |
+| Package | `mypackage` |
+
+## 10. Complete Example
+
+```python
+MAX_DISCOUNT = 20
+
+
+class ShoppingCart:
+
+    def __init__(self, price, quantity):
+        self.price = price
+        self.quantity = quantity
+
+    def calculate_total(self):
+        total_price = self.price * self.quantity
+        return total_price
+
+
+cart = ShoppingCart(500, 2)
+final_price = cart.calculate_total()
+
+print(final_price)
+```
+
+**Output:**
+
+```text
+1000
+```
+
+## Key Points
+
+- PEP 8 is Python's style guide.
+- Variables and functions use `snake_case`.
+- Classes use `PascalCase`.
+- Constants use `UPPER_CASE`.
+- Use 4 spaces for indentation.
+- Keep code readable and consistently formatted.
+- Follow proper import and spacing guidelines.
