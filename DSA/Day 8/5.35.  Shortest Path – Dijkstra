@@ -1,0 +1,1295 @@
+# Shortest Path – Dijkstra's Algorithm
+
+## 1. What is Dijkstra's Algorithm?
+
+**Dijkstra's Algorithm** is a graph algorithm used to find the shortest path from a single starting vertex (source) to all other reachable vertices in a weighted graph.
+
+It finds the minimum total edge weight required to travel from the source vertex to another vertex.
+
+### Example
+
+Consider this weighted graph:
+
+```text
+          4
+      A ------- B
+      |         |
+    1 |         | 2
+      |         |
+      C ------- D
+          3
+```
+
+Edges:
+
+```text
+A → B = 4
+A → C = 1
+C → D = 3
+B → D = 2
+```
+
+Starting vertex: A
+
+Possible paths from A to D:
+
+**Path 1:**
+
+```text
+A → B → D
+
+Cost = 4 + 2 = 6
+```
+
+**Path 2:**
+
+```text
+A → C → D
+
+Cost = 1 + 3 = 4
+```
+
+Therefore, the shortest path is:
+
+```text
+A → C → D
+
+Minimum Cost = 4
+```
+
+Dijkstra's Algorithm helps us find this minimum-cost path efficiently.
+
+---
+
+## 2. Understanding Weighted Graphs
+
+A weighted graph is a graph in which every edge has a numerical value called a weight.
+
+Example:
+
+```text
+       5
+   A ------- B
+   |         |
+  2|         |3
+   |         |
+   C ------- D
+       4
+```
+
+Weights can represent:
+
+- Distance between cities.
+- Travel time.
+- Network latency.
+- Transportation cost.
+- Fuel consumption.
+
+### Unweighted vs Weighted Graph
+
+| Feature | Unweighted Graph | Weighted Graph |
+|---|---|---|
+| Edges | No weights | Has weights |
+| Path cost | Number of edges | Sum of edge weights |
+| Shortest path | BFS | Dijkstra (if weights are non-negative) |
+| Example | Number of steps | Distance in kilometres |
+
+**Important:** Dijkstra's Algorithm works with non-negative edge weights. It does not correctly handle graphs with negative edge weights in general.
+
+For negative edge weights, consider the Bellman-Ford Algorithm.
+
+---
+
+## 3. How Does Dijkstra's Algorithm Work?
+
+Dijkstra's Algorithm follows a greedy approach.
+
+It repeatedly selects the unprocessed vertex with the smallest known distance from the source and tries to improve the distances to its neighbors.
+
+### Main steps
+
+1. Set the source distance to `0`.
+2. Set the distance of every other vertex to infinity.
+3. Select the vertex with the smallest known distance.
+4. Check all its neighboring vertices.
+5. Calculate the new distance through the current vertex.
+6. If the new distance is smaller, update the neighbor's distance.
+7. Repeat until no more useful vertices remain.
+
+### Important concept: Relaxation
+
+Relaxation means checking whether a newly discovered path is shorter than the previously known path.
+
+Formula:
+
+```text
+new_distance = distance[current] + edge_weight
+```
+
+If:
+
+```text
+new_distance < distance[neighbor]
+```
+
+Then update:
+
+```text
+distance[neighbor] = new_distance
+```
+
+This comparison is the heart of Dijkstra's Algorithm.
+
+---
+
+## 4. Understanding Infinity
+
+Initially, we do not know the shortest distance to any vertex except the source.
+
+Therefore, we assign infinity to all other vertices.
+
+Python provides:
+
+```python
+float("inf")
+```
+
+Example:
+
+```python
+distance = {
+    "A": 0,
+    "B": float("inf"),
+    "C": float("inf"),
+    "D": float("inf")
+}
+
+print(distance)
+```
+
+Output:
+
+```text
+{
+    'A': 0,
+    'B': inf,
+    'C': inf,
+    'D': inf
+}
+```
+
+Why infinity?
+
+Because any actual finite path distance is smaller than infinity.
+
+For example:
+
+```python
+print(10 < float("inf"))
+```
+
+Output:
+
+```text
+True
+```
+
+This makes it easy to update distances when we discover a path.
+
+---
+
+## 5. Graph Representation Using an Adjacency List
+
+We can represent a weighted graph using a dictionary.
+
+Consider:
+
+```text
+          4
+      A ------- B
+      |         |
+    1 |         | 2
+      |         |
+      C ------- D
+          3
+```
+
+Python representation:
+
+```python
+graph = {
+    "A": [("B", 4), ("C", 1)],
+    "B": [("A", 4), ("D", 2)],
+    "C": [("A", 1), ("D", 3)],
+    "D": [("B", 2), ("C", 3)]
+}
+```
+
+Understanding:
+
+```python
+"A": [("B", 4), ("C", 1)]
+```
+
+This means:
+
+- A is connected to B with weight 4.
+- A is connected to C with weight 1.
+
+Each neighbor is represented as a tuple:
+
+```python
+(neighbor, weight)
+```
+
+This example represents an undirected graph, so each edge appears in both directions.
+
+---
+
+# PART 1: DIJKSTRA'S ALGORITHM USING A PRIORITY QUEUE
+
+## 6. What is a Priority Queue?
+
+A priority queue is a data structure where elements are removed according to priority rather than insertion order.
+
+In Dijkstra's Algorithm, we want to process the vertex with the smallest distance first.
+
+Python provides a module called `heapq` to implement a min heap.
+
+### Understanding heapq
+
+```python
+import heapq
+
+heap = []
+
+heapq.heappush(heap, (5, "A"))
+heapq.heappush(heap, (2, "B"))
+heapq.heappush(heap, (8, "C"))
+
+print(heapq.heappop(heap))
+```
+
+Output:
+
+```text
+(2, 'B')
+```
+
+Why?
+
+Because `heapq` is a min heap. It removes the smallest item first.
+
+When tuples are inserted, Python compares the first element first.
+
+For Dijkstra, we store:
+
+```python
+(distance, vertex)
+```
+
+Example:
+
+```python
+(0, "A")
+(1, "C")
+(4, "B")
+```
+
+The vertex with the smallest distance is processed first.
+
+---
+
+## 7. Dijkstra's Algorithm – Complete Python Implementation
+
+```python
+import heapq
+
+def dijkstra(graph, start):
+
+    distance = {}
+
+    for vertex in graph:
+        distance[vertex] = float("inf")
+
+    distance[start] = 0
+
+    priority_queue = [(0, start)]
+
+    while priority_queue:
+
+        current_distance, current = heapq.heappop(priority_queue)
+
+        # Ignore outdated entries
+        if current_distance > distance[current]:
+            continue
+
+        for neighbor, weight in graph[current]:
+
+            new_distance = current_distance + weight
+
+            if new_distance < distance[neighbor]:
+
+                distance[neighbor] = new_distance
+
+                heapq.heappush(
+                    priority_queue,
+                    (new_distance, neighbor)
+                )
+
+    return distance
+
+
+graph = {
+    "A": [("B", 4), ("C", 1)],
+    "B": [("A", 4), ("D", 2)],
+    "C": [("A", 1), ("D", 3)],
+    "D": [("B", 2), ("C", 3)]
+}
+
+result = dijkstra(graph, "A")
+
+print(result)
+```
+
+Output:
+
+```text
+{
+    'A': 0,
+    'B': 4,
+    'C': 1,
+    'D': 4
+}
+```
+
+### Understanding the result
+
+| Vertex | Shortest distance from A |
+|---|---:|
+| A | 0 |
+| B | 4 |
+| C | 1 |
+| D | 4 |
+
+Explanation:
+
+- A to A = 0
+- A to B = 4
+- A to C = 1
+- A to D = 4
+
+For D, the shortest route is:
+
+```text
+A → C → D
+
+Cost = 1 + 3 = 4
+```
+
+---
+
+## 8. Understanding the Code Line by Line
+
+### Step 1: Import heapq
+
+```python
+import heapq
+```
+
+We use `heapq` to efficiently select the vertex with the smallest known distance.
+
+### Step 2: Initialize distances
+
+```python
+distance = {}
+
+for vertex in graph:
+    distance[vertex] = float("inf")
+```
+
+Initially, every vertex has an unknown distance.
+
+We assign infinity.
+
+### Step 3: Set the source distance to zero
+
+```python
+distance[start] = 0
+```
+
+The distance from the source to itself is always zero.
+
+### Step 4: Create the priority queue
+
+```python
+priority_queue = [(0, start)]
+```
+
+We start with the source vertex and its distance.
+
+Example:
+
+```text
+[(0, 'A')]
+```
+
+### Step 5: Continue while the queue is not empty
+
+```python
+while priority_queue:
+```
+
+The algorithm continues while there are vertices waiting to be processed.
+
+### Step 6: Remove the smallest distance
+
+```python
+current_distance, current = heapq.heappop(priority_queue)
+```
+
+This removes the vertex with the smallest distance.
+
+### Step 7: Ignore outdated entries
+
+```python
+if current_distance > distance[current]:
+    continue
+```
+
+A vertex can enter the priority queue more than once.
+
+If a better route is discovered later, an older entry may remain in the heap.
+
+We ignore such outdated entries.
+
+### Step 8: Explore neighbors
+
+```python
+for neighbor, weight in graph[current]:
+```
+
+We examine all neighboring vertices and their edge weights.
+
+### Step 9: Calculate the new distance
+
+```python
+new_distance = current_distance + weight
+```
+
+We calculate the cost of reaching the neighbor through the current vertex.
+
+### Step 10: Perform relaxation
+
+```python
+if new_distance < distance[neighbor]:
+```
+
+If the newly calculated path is shorter than the known path, update it.
+
+```python
+distance[neighbor] = new_distance
+```
+
+### Step 11: Add the updated distance to the heap
+
+```python
+heapq.heappush(
+    priority_queue,
+    (new_distance, neighbor)
+)
+```
+
+The neighbor will be processed according to its updated priority.
+
+---
+
+## 9. Dijkstra's Algorithm – Complete Dry Run
+
+Consider this graph:
+
+```text
+          4
+      A ------- B
+      |         |
+    1 |         | 2
+      |         |
+      C ------- D
+          3
+```
+
+Starting vertex: A
+
+Initial distances:
+
+| Vertex | Distance |
+|---|---:|
+| A | 0 |
+| B | ∞ |
+| C | ∞ |
+| D | ∞ |
+
+Initial priority queue:
+
+```text
+[(0, A)]
+```
+
+### Step 1: Process A
+
+Remove:
+
+```text
+(0, A)
+```
+
+Neighbors of A:
+
+- B with weight 4.
+- C with weight 1.
+
+Calculate:
+
+```text
+A → B = 0 + 4 = 4
+A → C = 0 + 1 = 1
+```
+
+Update distances:
+
+| Vertex | Distance |
+|---|---:|
+| A | 0 |
+| B | 4 |
+| C | 1 |
+| D | ∞ |
+
+Priority queue:
+
+```text
+[(1, C), (4, B)]
+```
+
+### Step 2: Process C
+
+Remove:
+
+```text
+(1, C)
+```
+
+Neighbor of C:
+
+- A with weight 1.
+- D with weight 3.
+
+Calculate:
+
+```text
+C → A = 1 + 1 = 2
+C → D = 1 + 3 = 4
+```
+
+A already has distance 0, so no update is required.
+
+D is updated:
+
+```text
+distance[D] = 4
+```
+
+Priority queue:
+
+```text
+[(4, B), (4, D)]
+```
+
+### Step 3: Process B
+
+Remove:
+
+```text
+(4, B)
+```
+
+Neighbors:
+
+- A with weight 4.
+- D with weight 2.
+
+Calculate:
+
+```text
+B → A = 4 + 4 = 8
+B → D = 4 + 2 = 6
+```
+
+Current distances:
+
+```text
+A = 0
+D = 4
+```
+
+Neither new path improves the existing distance.
+
+No update is required.
+
+Priority queue:
+
+```text
+[(4, D)]
+```
+
+### Step 4: Process D
+
+Remove:
+
+```text
+(4, D)
+```
+
+Neighbors:
+
+- B with weight 2.
+- C with weight 3.
+
+Calculate:
+
+```text
+D → B = 4 + 2 = 6
+D → C = 4 + 3 = 7
+```
+
+Existing distances are smaller, so no update is required.
+
+Priority queue becomes empty.
+
+### Final result
+
+| Vertex | Shortest distance |
+|---|---:|
+| A | 0 |
+| B | 4 |
+| C | 1 |
+| D | 4 |
+
+Final shortest path to D:
+
+```text
+A → C → D
+
+Cost = 4
+```
+
+---
+
+# PART 2: FINDING THE ACTUAL SHORTEST PATH
+
+## 10. How to Reconstruct the Shortest Path
+
+The previous implementation returns the shortest distance to every vertex.
+
+But what if we also want the actual path?
+
+For that, we maintain a `parent` dictionary.
+
+Whenever a shorter path is discovered, store the previous vertex.
+
+Example:
+
+```python
+parent["D"] = "C"
+```
+
+This means we reached D through C.
+
+### Complete implementation
+
+```python
+import heapq
+
+def dijkstra(graph, start):
+
+    distance = {
+        vertex: float("inf")
+        for vertex in graph
+    }
+
+    parent = {
+        vertex: None
+        for vertex in graph
+    }
+
+    distance[start] = 0
+
+    priority_queue = [(0, start)]
+
+    while priority_queue:
+
+        current_distance, current = heapq.heappop(priority_queue)
+
+        if current_distance > distance[current]:
+            continue
+
+        for neighbor, weight in graph[current]:
+
+            new_distance = current_distance + weight
+
+            if new_distance < distance[neighbor]:
+
+                distance[neighbor] = new_distance
+
+                parent[neighbor] = current
+
+                heapq.heappush(
+                    priority_queue,
+                    (new_distance, neighbor)
+                )
+
+    return distance, parent
+
+
+def get_path(parent, target):
+
+    path = []
+
+    current = target
+
+    while current is not None:
+
+        path.append(current)
+
+        current = parent[current]
+
+    path.reverse()
+
+    return path
+
+
+graph = {
+    "A": [("B", 4), ("C", 1)],
+    "B": [("A", 4), ("D", 2)],
+    "C": [("A", 1), ("D", 3)],
+    "D": [("B", 2), ("C", 3)]
+}
+
+distance, parent = dijkstra(graph, "A")
+
+print("Shortest distance:", distance["D"])
+
+print("Shortest path:", get_path(parent, "D"))
+```
+
+Output:
+
+```text
+Shortest distance: 4
+Shortest path: ['A', 'C', 'D']
+```
+
+### Understanding the parent dictionary
+
+After processing the graph:
+
+```python
+parent = {
+    "A": None,
+    "B": "A",
+    "C": "A",
+    "D": "C"
+}
+```
+
+To reconstruct the path to D:
+
+```text
+D
+↑
+C
+↑
+A
+```
+
+We collect:
+
+```python
+["D", "C", "A"]
+```
+
+Then reverse it:
+
+```python
+["A", "C", "D"]
+```
+
+**Important:** If a target is unreachable, its distance remains infinity and its parent remains `None`. Check reachability before reconstructing its path.
+
+---
+
+# PART 3: DIJKSTRA WITHOUT A PRIORITY QUEUE
+
+## 11. Simple Dijkstra Implementation
+
+Dijkstra can also be implemented without `heapq`.
+
+We can repeatedly search for the unvisited vertex with the smallest known distance.
+
+This is easier to understand but less efficient for large graphs.
+
+### Implementation
+
+```python
+def dijkstra_simple(graph, start):
+
+    distance = {
+        vertex: float("inf")
+        for vertex in graph
+    }
+
+    visited = set()
+
+    distance[start] = 0
+
+    while len(visited) < len(graph):
+
+        current = None
+
+        smallest = float("inf")
+
+        for vertex in graph:
+
+            if vertex not in visited and distance[vertex] < smallest:
+
+                smallest = distance[vertex]
+
+                current = vertex
+
+        if current is None:
+            break
+
+        visited.add(current)
+
+        for neighbor, weight in graph[current]:
+
+            new_distance = distance[current] + weight
+
+            if new_distance < distance[neighbor]:
+
+                distance[neighbor] = new_distance
+
+    return distance
+
+
+graph = {
+    "A": [("B", 4), ("C", 1)],
+    "B": [("A", 4), ("D", 2)],
+    "C": [("A", 1), ("D", 3)],
+    "D": [("B", 2), ("C", 3)]
+}
+
+print(dijkstra_simple(graph, "A"))
+```
+
+Output:
+
+```text
+{'A': 0, 'B': 4, 'C': 1, 'D': 4}
+```
+
+### Complexity
+
+| Implementation | Time Complexity |
+|---|---|
+| Without priority queue, adjacency list | O(V² + E), commonly O(V²) for simple dense-graph implementations |
+| With binary heap and adjacency list | O((V + E) log V) |
+
+For sparse graphs, the heap-based implementation is generally preferred.
+
+---
+
+# PART 4: IMPORTANT CONCEPTS
+
+## 12. Why Does Dijkstra Use a Greedy Approach?
+
+Dijkstra always chooses the unprocessed vertex with the smallest tentative distance.
+
+It assumes that this distance cannot be improved later.
+
+This is valid because all edge weights are non-negative.
+
+Suppose:
+
+```text
+A → B = 2
+A → C = 5
+B → C = 1
+```
+
+Starting from A:
+
+Initially:
+
+```text
+A = 0
+B = 2
+C = 5
+```
+
+Dijkstra processes B first because its distance is 2.
+
+From B, it discovers:
+
+```text
+A → B → C = 2 + 1 = 3
+```
+
+The distance to C improves from 5 to 3.
+
+This demonstrates how relaxation improves shortest-distance estimates.
+
+---
+
+## 13. Why Does Dijkstra Fail with Negative Weights?
+
+Dijkstra assumes that once the smallest-distance vertex is selected, its distance is final.
+
+Negative weights can break this assumption.
+
+Example:
+
+```text
+A → B = 2
+A → C = 5
+C → B = -10
+```
+
+The route:
+
+```text
+A → C → B
+```
+
+has cost:
+
+```text
+5 + (-10) = -5
+```
+
+But Dijkstra may process B first with distance 2 and consider it finalized.
+
+This is why Dijkstra is not suitable for graphs with negative edge weights.
+
+Use Bellman-Ford for graphs with negative edge weights, provided there is no reachable negative-weight cycle when finite shortest paths are required.
+
+---
+
+## 14. Dijkstra vs BFS vs Bellman-Ford
+
+| Feature | BFS | Dijkstra | Bellman-Ford |
+|---|---|---|---|
+| Graph type | Unweighted | Weighted, non-negative weights | Weighted, can include negative weights |
+| Main data structure | Queue | Priority queue | Edge relaxation |
+| Shortest path | Yes, unweighted | Yes, non-negative weights | Yes, if no reachable negative cycle |
+| Negative weights | Not applicable to ordinary unweighted BFS | No | Yes |
+| Time complexity | O(V + E) | O((V + E) log V) with binary heap | O(V × E) |
+| Detect negative cycles | No | No | Yes |
+
+### When should you use each algorithm?
+
+**BFS:**
+- All edges have equal cost.
+- You need the minimum number of edges.
+
+**Dijkstra:**
+- Edges have different non-negative weights.
+- You need minimum total cost.
+
+**Bellman-Ford:**
+- Negative edge weights may exist.
+- You need negative-cycle detection.
+
+---
+
+## 15. Important Limitations of Dijkstra
+
+1. It does not correctly handle negative edge weights in general.
+2. It finds shortest paths from one source vertex.
+3. It does not directly solve all-pairs shortest paths.
+4. A disconnected vertex remains at infinity.
+5. A negative-weight cycle makes shortest paths undefined for vertices that can be reached from that cycle.
+
+For all-pairs shortest paths, consider Floyd-Warshall or running a suitable single-source algorithm from each vertex.
+
+---
+
+# PART 5: COMPLEXITY ANALYSIS
+
+## 16. Time and Space Complexity
+
+Let:
+
+- V = Number of vertices.
+- E = Number of edges.
+
+### Dijkstra using a binary heap
+
+| Operation | Complexity |
+|---|---|
+| Initialize distances | O(V) |
+| Insert and remove heap entries | O((V + E) log V) |
+| Process all edges | O(E) |
+| Overall time | O((V + E) log V) |
+| Auxiliary space | O(V + E) including the graph representation and heap |
+
+If the graph is sparse, this implementation is efficient.
+
+For a simple undirected graph, E can be up to O(V²), but in many real-world networks E is much smaller.
+
+### Dijkstra without a priority queue
+
+| Operation | Complexity |
+|---|---|
+| Find minimum unvisited vertex | O(V) per iteration |
+| Repeat for all vertices | O(V²) |
+| Relax all edges | O(E) |
+| Overall time | O(V² + E) |
+| Auxiliary space | O(V) |
+
+---
+
+## 17. Common Mistakes in Dijkstra
+
+### Mistake 1: Using a normal queue
+
+Dijkstra needs the smallest-distance vertex first.
+
+Use a priority queue, not an ordinary FIFO queue.
+
+### Mistake 2: Forgetting to initialize distances
+
+Set the source to zero and all other vertices to infinity.
+
+### Mistake 3: Incorrect relaxation
+
+Correct:
+
+```python
+new_distance = current_distance + weight
+
+if new_distance < distance[neighbor]:
+    distance[neighbor] = new_distance
+```
+
+### Mistake 4: Using Dijkstra with negative weights
+
+Dijkstra requires non-negative edge weights.
+
+### Mistake 5: Forgetting outdated heap entries
+
+The same vertex may have multiple entries in the heap.
+
+Ignore an entry if its distance is greater than the current best known distance.
+
+### Mistake 6: Confusing distance with path
+
+The distance is the total cost.
+
+The path is the sequence of vertices.
+
+Use a parent dictionary to reconstruct the path.
+
+### Mistake 7: Assuming all vertices are reachable
+
+Some vertices may be disconnected from the source.
+
+Their shortest distance remains infinity.
+
+---
+
+# PART 6: INTERVIEW QUESTIONS
+
+## 18. Conceptual Questions
+
+1. What is Dijkstra's Algorithm?
+2. What is a weighted graph?
+3. Why does Dijkstra use a priority queue?
+4. What is relaxation in shortest-path algorithms?
+5. Why do we initialize distances to infinity?
+6. Why does Dijkstra require non-negative edge weights?
+7. What is the difference between BFS and Dijkstra?
+8. What is the time complexity of heap-based Dijkstra?
+9. What is the purpose of `heapq`?
+10. How do we reconstruct the shortest path?
+11. What happens when a vertex is unreachable?
+12. Can Dijkstra find the shortest paths to all vertices from one source?
+13. Why can a vertex appear multiple times in the priority queue?
+14. What is the difference between Dijkstra and Bellman-Ford?
+
+## 19. Coding Questions
+
+1. Implement Dijkstra using `heapq`.
+2. Implement Dijkstra without a priority queue.
+3. Find the shortest distance from a source to every vertex.
+4. Find the actual shortest path between two vertices.
+5. Find the shortest path between two cities.
+6. Find the shortest path in a weighted directed graph.
+7. Handle disconnected vertices.
+8. Compare BFS and Dijkstra on different graph types.
+9. Find the shortest path in a network with non-negative edge weights.
+10. Explain why Dijkstra fails with negative weights.
+
+---
+
+## 20. LeetCode Problems for Dijkstra
+
+| Problem | Difficulty | Main Concept |
+|---|---|---|
+| [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/) | Medium | Single-source shortest path |
+| [1514. Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/) | Medium | Modified Dijkstra |
+| [1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/) | Medium | Dijkstra on a grid |
+| [1976. Number of Ways to Arrive at Destination](https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/) | Medium | Shortest path counting |
+| [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/) | Medium | Constrained shortest path |
+| [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/) | Hard | Dijkstra on a grid |
+
+---
+
+## 21. Practice Problems
+
+Try solving these without referring to the solutions.
+
+### Level 1 – Beginner
+
+**Problem 1: Find the Shortest Distance**
+
+Given a weighted graph and a source vertex, return the shortest distance to every vertex.
+
+Input:
+
+```python
+graph = {
+    0: [(1, 4), (2, 1)],
+    1: [(0, 4), (2, 2), (3, 1)],
+    2: [(0, 1), (1, 2), (3, 5)],
+    3: [(1, 1), (2, 5)]
+}
+
+start = 0
+```
+
+Expected output:
+
+```python
+{
+    0: 0,
+    1: 3,
+    2: 1,
+    3: 4
+}
+```
+
+**Problem 2: Find the Shortest Distance Between Two Vertices**
+
+Given a source and target, return the minimum path cost.
+
+Input:
+
+```python
+start = 0
+target = 3
+```
+
+Expected output:
+
+```text
+4
+```
+
+**Problem 3: Handle Unreachable Vertices**
+
+Given a graph with disconnected components, return infinity for vertices that cannot be reached from the source.
+
+### Level 2 – Intermediate
+
+**Problem 4: Reconstruct the Shortest Path**
+
+Return the actual sequence of vertices, not just the minimum distance.
+
+**Problem 5: Directed Weighted Graph**
+
+Implement Dijkstra for a directed graph.
+
+**Problem 6: Compare BFS and Dijkstra**
+
+Solve the same shortest-path problem using BFS for an unweighted graph and Dijkstra for a weighted graph.
+
+### Level 3 – Interview Level
+
+**Problem 7: Network Delay Time**
+
+Given a network and transmission times, determine how long it takes for a signal to reach every node.
+
+**Problem 8: Minimum Effort Path**
+
+Find a path in a grid that minimizes the maximum absolute difference between adjacent cells.
+
+**Problem 9: Cheapest Flights Within K Stops**
+
+Find the cheapest flight from a source to a destination with at most K stops.
+
+**Problem 10: Number of Shortest Paths**
+
+Find the number of different shortest paths from the source to the destination in a weighted graph.
+
+---
+
+## 22. Key Takeaways
+
+1. Dijkstra's Algorithm finds shortest paths from a single source.
+2. It works with non-negative edge weights.
+3. It uses a greedy approach.
+4. A priority queue helps process the smallest known distance first.
+5. `heapq` provides a min heap in Python.
+6. Relaxation updates a vertex when a shorter path is discovered.
+7. A parent dictionary helps reconstruct the actual shortest path.
+8. Unreachable vertices retain infinite distance.
+9. Heap-based Dijkstra takes O((V + E) log V) time with an adjacency list.
+10. Bellman-Ford is an alternative when negative edge weights are present.
+
+---
+
+## 23. Recommended Graph Learning Roadmap
+
+```text
+Graph Representation
+        ↓
+BFS – Breadth First Search
+        ↓
+DFS – Recursive and Iterative
+        ↓
+Topological Sorting
+        ↓
+Dijkstra's Algorithm
+        ↓
+Bellman-Ford Algorithm
+        ↓
+Floyd-Warshall Algorithm
+        ↓
+Minimum Spanning Tree
+        ↓
+Prim's Algorithm
+        ↓
+Kruskal's Algorithm
+```
+
+**Next topic: Bellman-Ford Algorithm – Shortest Path with Negative Weights.**
+
+### Final advice
+
+Before moving to Bellman-Ford, make sure you can explain these three things:
+
+1. Why does Dijkstra use a priority queue?
+2. What exactly happens during relaxation?
+3. Why does Dijkstra fail with negative edge weights?
+
+If you understand these three concepts, you have understood the foundation of Dijkstra's Algorithm.
